@@ -14,4 +14,13 @@ Install **hapi-spa** by either running `npm install hapi-spa` in your sites work
    - ext
 
 ### Available options
-_(Coming soon)_
+```
+{
+    folder: '/', // Required in plugin options - specifies location of SPA files
+    path: '/', // Optional - route path
+    index: 'index.html', // Optional - SPA index file
+    autoIndex: true, // Optional - default directory handler setting
+    redirectToSlash: false, // Optional - disables default directory handler setting
+    hash: '/#!/' // Optional - Hash or other leading character SPA router uses
+}
+```
