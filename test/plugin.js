@@ -25,7 +25,7 @@ describe('hapi-spa', function () {
     it('can be added as a plugin to hapi', function (done) {
 
         var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', {folder: '/var/www/public_html'}, function (err) {
+        server.pack.require('../', { folder: '/var/www/public_html'}, function (err) {
 
             expect(err).to.not.exist;
             table = server.table();
@@ -33,10 +33,25 @@ describe('hapi-spa', function () {
         });
     });
 
+    it('should have a route handler', function (done) {
+
+        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
+        server.pack.require('../', { path: '/spa' }, function (err) {
+
+        expect(err).to.not.exist;
+        table = server.table();
+        table.filter(function (route) {
+            expect(route.handler).to.be.an('object');
+        });
+
+        done();
+        });
+    });
+
     it('can use plugin options', function (done) {
 
         var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', {path: '/test', index: 'index.htm', folder: 'spa/', hash: '#' }, function (err) {
+        server.pack.require('../', { path: '/test', index: 'index.htm', folder: 'spa/', hash: '#' }, function (err) {
 
         expect(err).to.not.exist;
         table = server.table();
