@@ -120,4 +120,34 @@ describe('hapi-spa', function () {
         });
     });
 
+    it('tries a clean url index file before returning 404', function(done) {
+
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/spa/', autoIndex: true }, function (err) {
+
+            expect(err).to.not.exist;
+            server.inject('/spa/path', function(res) {
+                expect(res.headers.location.indexOf('index.html')).to.equal(-1);
+                expect(res.statusCode).to.equal(302);
+                done();
+            });
+
+        });
+    });
+
+    it('tries an index file using full path if autoIndex is false before returning 404', function(done) {
+
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/spa/', autoIndex: false }, function (err) {
+
+            expect(err).to.not.exist;
+            server.inject('/spa/path', function(res) {
+                expect(res.headers.location.indexOf('index.html')).to.not.equal(-1);
+                expect(res.statusCode).to.equal(302);
+                done();
+            });
+
+        });
+    });
+
 });
