@@ -8,8 +8,6 @@ Install **hapi-spa** by either running `npm install hapi-spa` in your sites work
 ### Required permissions
 **hapi-spa** requires the following permissions to be granted on the server for the plugin to work correctly:
    - route
-
-   - help
    - events
    - ext
 
@@ -23,4 +21,18 @@ Install **hapi-spa** by either running `npm install hapi-spa` in your sites work
     redirectToSlash: false, // Optional - disables default directory handler setting
     hash: '/#!/' // Optional - Hash or other leading character SPA router uses
 }
+```
+
+### Example
+```
+var Hapi = require('hapi');
+
+var server = new Hapi.Server(8000, { files: { relativeTo: '/' } });
+
+server.pack.require('hapi-spa', { folder: '/var/www/app/'}, function(err) {
+  if (err) throw err;
+  console.log('loaded hapi-spa');
+});
+
+server.start();
 ```
