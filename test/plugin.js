@@ -24,8 +24,8 @@ describe('hapi-spa', function () {
 
     it('can be added as a plugin to hapi', function (done) {
 
-        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', { folder: '/var/www/public_html'}, function (err) {
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/spa/'}, function (err) {
 
             expect(err).to.not.exist;
             table = server.table();
@@ -35,13 +35,13 @@ describe('hapi-spa', function () {
 
     it('should have a route handler', function (done) {
 
-        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
         server.pack.require('../', { path: '/spa' }, function (err) {
 
         expect(err).to.not.exist;
         table = server.table();
         table.filter(function (route) {
-            expect(route.handler).to.be.an('object');
+            expect(route.settings.handler).to.be.an('function');
         });
 
         done();
@@ -50,8 +50,8 @@ describe('hapi-spa', function () {
 
     it('can use plugin options', function (done) {
 
-        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', { path: '/test', index: 'index.htm', folder: 'spa/', hash: '#' }, function (err) {
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { path: '/test', index: 'index.htm', folder: 'test/spa/', hash: '#' }, function (err) {
 
         expect(err).to.not.exist;
         table = server.table();
@@ -66,8 +66,8 @@ describe('hapi-spa', function () {
 
     it('returns an index file', function(done) {
 
-        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', { folder: './spa/' }, function (err) {
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/spa/' }, function (err) {
 
             expect(err).to.not.exist;
             server.inject('/index.html', function(res) {
@@ -80,8 +80,8 @@ describe('hapi-spa', function () {
 
     it('returns a static asset', function(done) {
 
-        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', { folder: './spa/' }, function (err) {
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/spa/' }, function (err) {
 
             expect(err).to.not.exist;
             server.inject('/assets/test.txt', function(res) {
@@ -94,8 +94,8 @@ describe('hapi-spa', function () {
 
     it('returns a 404 if index file not found', function(done) {
 
-        var server = new Hapi.Server({ files: { relativeTo: __dirname } });
-        server.pack.require('../', { folder: './not-exist/' }, function (err) {
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/' }, function (err) {
 
             expect(err).to.not.exist;
             server.inject('/index.html', function(res) {
@@ -105,4 +105,19 @@ describe('hapi-spa', function () {
 
         });
     });
+
+    it('tries an index file before returning 404', function(done) {
+
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', { folder: 'test/spa/' }, function (err) {
+
+            expect(err).to.not.exist;
+            server.inject('/spa/path', function(res) {
+                expect(res.statusCode).to.equal(302);
+                done();
+            });
+
+        });
+    });
+
 });
