@@ -150,4 +150,23 @@ describe('hapi-spa', function () {
         });
     });
 
+    it('can register multiple single page apps', function(done) {
+
+        var server = new Hapi.Server({ files: { relativeTo: process.cwd() } });
+        server.pack.require('../', [{ folder: 'test/spa/' }, { folder: 'test/spa2/', path: '/2/'}], function (err) {
+
+            expect(err).to.not.exist;
+            server.inject('/index.html', function(res) {
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+
+            server.inject('/2/index.html', function(res) {
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+
+        });
+    });
+
 });

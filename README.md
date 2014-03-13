@@ -23,6 +23,9 @@ Install **hapi-spa** by either running `npm install hapi-spa` in your sites work
 }
 ```
 
+An array of options can be used to register multiple single page apps
+
+
 ### Example
 ```
 var Hapi = require('hapi');
@@ -30,6 +33,21 @@ var Hapi = require('hapi');
 var server = new Hapi.Server(8000, { files: { relativeTo: '/' } });
 
 server.pack.require('hapi-spa', { folder: '/var/www/app/'}, function(err) {
+  if (err) throw err;
+  console.log('loaded hapi-spa');
+});
+
+server.start();
+```
+
+#### Multiple SPAs
+
+```
+var Hapi = require('hapi');
+
+var server = new Hapi.Server(8000, { files: { relativeTo: '/' } });
+
+server.pack.require('hapi-spa', [{ path: '/app1/, folder: '/var/www/app1/'}, { path: '/app2/, folder: '/var/www/app2/'}], function(err) {
   if (err) throw err;
   console.log('loaded hapi-spa');
 });
